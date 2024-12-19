@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Défilement Mixte</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        margin: 0 auto;
+        overflow-x: hidden;
+      }
+      section.vertical {
+        display: flex;
+        flex-direction: column;
+      }
+      div.vertical {
+        height: 100vh;
+        width: 100vw;
+        background-color: blueviolet;
+        color: aliceblue;
+        font-size: 5rem;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid white;
+      }
+      section.horizontal-1, section.horizontal-2 {
+        width: 300vw;
+        display: flex;
+        flex-direction: row;
+      }
+      div.horizontal-1, div.horizontal-2 {
+        width: 100vw;
+        height: 100vh;
+        background-color: rgb(255, 8, 0);
+        color: aliceblue;
+        font-size: 5rem;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid white;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="vertical">
+      <div class="vertical">W 1</div>
+      <div class="vertical">W 2</div>
+      <div class="vertical">W 3</div>
+    </section>
+    <section class="horizontal-1">
+      <div class="horizontal-1">H 1</div>
+      <div class="horizontal-1">H 2</div>
+      <div class="horizontal-1">H 3</div>
+    </section>
+    <section class="vertical right">
+      <div class="vertical">W 4</div>
+      <div class="vertical">W 5</div>
+      <div class="vertical">W 6</div>
+    </section>
+    <section class="horizontal-2">
+      <div class="horizontal-2">H 4</div>
+      <div class="horizontal-2">H 5</div>
+      <div class="horizontal-2">H 6</div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+      // Enregistre le plugin ScrollTrigger, qui permet de déclencher des animations en fonction du défilement.
+      gsap.registerPlugin(ScrollTrigger);
+    
+      // Configuration générale pour l'animation des sections horizontales
+      const horizontalScrollConfig = {
+        x: "-100vw", // Déplace l'élément horizontalement de 100% de la largeur de la fenêtre vers la gauche.
+        ease: "none", // Pas d'accélération ou d'effet de fluidité ; le mouvement est linéaire.
+    
+        scrollTrigger: {
+          start: "top top", // Déclenche l'animation lorsque le haut de l'élément atteint le haut de la fenêtre.
+          end: "+=200%", // (Commenté) La durée de l'animation est basée sur un défilement de deux écrans de hauteur.
+          pin: true, // Fixe l'élément à sa position actuelle pendant le défilement (pinné).
+          scrub: 1 // (Commenté) Synchronise l'animation avec le défilement pour un effet fluide.
+        }
+      };
+    
+      // Applique la configuration à chaque section horizontale définie par les classes "horizontal-1" et "horizontal-2".
+      ["horizontal-1", "horizontal-2"].forEach(className => {
+        gsap.to(`.${className}`, { // Crée une animation GSAP pour chaque classe.
+          ...horizontalScrollConfig, // Utilise toutes les propriétés définies dans horizontalScrollConfig.
+          
+          scrollTrigger: {
+            ...horizontalScrollConfig.scrollTrigger, // Copie les options de déclenchement définies précédemment.
+            trigger: `.${className}` // Définit l'élément déclencheur pour l'animation (par exemple, .horizontal-1 ou .horizontal-2).
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
